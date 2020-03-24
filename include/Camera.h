@@ -22,8 +22,6 @@ public:
 
 	void input(GLFWwindow* window);
 
-	void mouse_callback(GLFWwindow* window, double xpos, double ypos) {}
+	void mouse_callback(GLFWwindow* window, double xpos, double ypos);	
 
-	void scroll_callback(GLFWwindow* window, double xOffset, double yOffset) {}
-	
 };

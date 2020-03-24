@@ -1,58 +1,15 @@
-#define STB_IMAGE_IMPLEMENTATION
 
 #include <Shader.h>
-#include <stb_image.h>
+#include <Model.h>
 #include <Camera.h>
 
 GLFWwindow* window = nullptr;
 
 Camera* camera = new Camera;
 
-
-
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 	camera->mouse_callback(window, xpos, ypos);
 }
-
-unsigned int initTexture(char const * path) {
-	unsigned int textureID;
-
-	glGenTextures(1, &textureID);
-
-	int width, height, nrComponents;
-	unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
-
-	if (data)
-	{
-		GLenum format;
-		if (nrComponents == 1)
-			format = GL_RED;
-		else if (nrComponents == 3)
-			format = GL_RGB;
-		else if (nrComponents == 4)
-			format = GL_RGBA;
-
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	}
-	else
-	{
-		std::cout << "ERROR LOADING PATH: " << path << std::endl;
-	}
-
-	stbi_image_free(data);
-
-
-	return textureID;
-}
-
 
 bool initGL() {
 	if (!glfwInit()) {
@@ -100,6 +57,9 @@ int main() {
 		return -1;
 	}
 
+	Shader myShader("C:/Users/Vitor/Documents/AssimpTest/shaders/vs.txt", "C:/Users/Vitor/Documents/AssimpTest/shaders/fs.txt");
+	Model crysis("C:/Users/Vitor/Documents/AssimpTest/nanosuit/nanosuit.obj");
+
 	glEnable(GL_DEPTH_TEST);
 
 	do {
@@ -107,6 +67,18 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		camera->input(window);
+
+		myShader.use();
+
+		camera->transform(&myShader);
+
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		myShader.setMat4("model", model);
+		crysis.Draw(myShader);
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
