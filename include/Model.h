@@ -14,13 +14,13 @@ public:
 	std::string directory;
 	bool gammaCorrection;
 
-	Model(char* path, bool gamma = false);
+	Model(std::string const &path, bool gamma = false);
 
 	void Draw(Shader shader);
 
 private:
 
-	void loadModel(std::string path);
+	void loadModel(std::string const &path);
 
 	void processNode(aiNode* node, const aiScene* scene);
 

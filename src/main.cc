@@ -58,7 +58,7 @@ int main() {
 	}
 
 	Shader myShader("C:/Users/Vitor/Documents/AssimpTest/shaders/vs.txt", "C:/Users/Vitor/Documents/AssimpTest/shaders/fs.txt");
-	Model crysis("C:/Users/Vitor/Documents/AssimpTest/nanosuit/nanosuit.obj");
+	Model crysis("C:/Users/Vitor/Documents/AssimpTest/nanosuit.mtl");
 
 	glEnable(GL_DEPTH_TEST);
 

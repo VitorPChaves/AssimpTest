@@ -1,5 +1,7 @@
 #include <Camera.h>
 
+glm::vec3 llaka(0.0f);
+
 void Camera::transform(Shader* shader) {
 
 	glm::mat4 view = glm::mat4(1.0f);
@@ -36,8 +38,8 @@ void Camera::input(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
 
 		if (cameraP.y <= 20.0f) {
-			cameraP.y += 0.25f;
-
+			cameraP.y += 0.1f;
+			check = true;
 		}
 		if (cameraP.y >= 19.0f || (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)) {
 			check = true;
@@ -49,13 +51,19 @@ void Camera::input(GLFWwindow* window) {
 	}
 
 	if (check == true) {
-		if (cameraP.z == 5.0f) {
-			cameraP.y = 3.0f;
-		}
-		else {
-			cameraP.y -= 0.1f;
-		}
+		cameraP.y -= 0.1f;
+		//if (cameraP.z == 5.0f) {
+		//	cameraP.y = 3.0f;
+		//}
+		//else {
+		//	cameraP.y -= 0.1f;
+		//}
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		check = false;
+	}
+
 }
 
 void Camera::mouse_callback(GLFWwindow* window, double xpos, double ypos) {
