@@ -2,6 +2,7 @@
 #include <Shader.h>
 #include <Model.h>
 #include <Camera.h>
+#include <Things.h>
 
 GLFWwindow* window = nullptr;
 
@@ -42,7 +43,7 @@ bool initGL() {
 		return -1;
 	}
 
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	glEnable(GL_BLEND);// you enable blending function
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -57,8 +58,11 @@ int main() {
 		return -1;
 	}
 
-	Shader myShader("C:/Users/Vitor/Documents/AssimpTest/shaders/vs.txt", "C:/Users/Vitor/Documents/AssimpTest/shaders/fs.txt");
-	Model crysis("C:/Users/Vitor/Documents/AssimpTest/nanosuit.mtl");
+	Things* things = new Things;
+
+	things->initBuffers();
+
+	Shader shader("C:/Users/Vitor/Documents/AdvancedOpenGL/shaders/vs.txt", "C:/Users/Vitor/Documents/AdvancedOpenGL/shaders/fs.txt");
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -68,16 +72,11 @@ int main() {
 
 		camera->input(window);
 
-		myShader.use();
-
-		camera->transform(&myShader);
-
-
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
-		myShader.setMat4("model", model);
-		crysis.Draw(myShader);
+		shader.use();
+		shader.setInt("texture1", 0);
+		camera->camProjection(&shader);
+		things->drawFloor(&shader);
+		things->drawCube(&shader);
 
 
 		glfwSwapBuffers(window);
@@ -85,6 +84,7 @@ int main() {
 
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && !glfwWindowShouldClose(window));
 
+	things->~Things();
 
 	glfwTerminate();
 
